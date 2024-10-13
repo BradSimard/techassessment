@@ -25,6 +25,12 @@ public class ModelAccessor {
         this.tableName = this.cls.getDeclaredField("TABLE_NAME").get(this.cls.getDeclaredConstructor().newInstance()).toString();
     }
 
+    /**
+     * Dynamically create an instance of the accessor's class and populate its fields using the data from the database result.
+     * @param dbResults the results provided from DBConnection.query
+     * @param meta database metadata (contains column names)
+     * @return an instance of the class provided to the accessor
+     */
     private DBTable dynamicSet(ResultSet dbResults, ResultSetMetaData meta) {
         DBTable returnObject = null;
 
@@ -52,6 +58,12 @@ public class ModelAccessor {
         return returnObject;
     }
 
+    /**
+     * Provided with a UUID for the record desired, return the entire record from the database
+     * @param db A DBConnection instance
+     * @param id The UUID of the record to be found
+     * @return an instance of the class provided to the accessor
+     */
     public DBTable getById(DBConnection db, UUID id) {
         try {
             // Build the select by id statement
@@ -75,6 +87,11 @@ public class ModelAccessor {
         return null;
     }
 
+    /**
+     * Find all records for the class of the accessor
+     * @param db A DBConnection instance
+     * @return instance(s) of the class provided to the accessor
+     */
     public List<DBTable> getAll(DBConnection db) {
         List<DBTable> returnObjects = new ArrayList<>();
         try {
@@ -98,6 +115,12 @@ public class ModelAccessor {
         return returnObjects;
     }
 
+    /**
+     * Given a local instance of the class of the accessor, insert the record data into the related database table
+     * @param db A DBConnection instance
+     * @param incomingData Data to be used to insert a new record into the db
+     * @return the newly created record as an instance of the class provided to the accessor
+     */
     public DBTable create(DBConnection db, DBTable incomingData) {
         try {
             // Get the name of the table based on the class
@@ -172,6 +195,12 @@ public class ModelAccessor {
         return null;
     }
 
+    /**
+     * Perform an update on an existing record in the database
+     * @param db A DBConnection instance
+     * @param recordId the UUID of the record that already exists in the database
+     * @param incomingData Data to be used to update the chosen record
+     */
     public void update(DBConnection db, UUID recordId, DBTable incomingData) {
         try {
             // Get the name of the table based on the class
@@ -232,6 +261,11 @@ public class ModelAccessor {
         }
     }
 
+    /**
+     * Delete an existing record in the database
+     * @param db A DBConnection instance
+     * @param id the UUID of the record to be deleted
+     */
     public void delete(DBConnection db, UUID id) {
         try {
             // Build the delete statement
